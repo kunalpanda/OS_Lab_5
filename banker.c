@@ -126,32 +126,37 @@ int release_resources(int customer_num, int release[]) {
 void *customer_routine(void *arg) {
     int customer_num = *(int *)arg;
 
-    // Example: Simulate customer's resource request
-    int request[NUMBER_OF_RESOURCES]; // Define an array to hold the request
-    for (int i = 0; i < NUMBER_OF_RESOURCES; i++) {
-        // Request up to the customer's maximum need
-        request[i] = need[customer_num][i] > 0 ? rand() % (need[customer_num][i] + 1) : 0;
-    }
-
-    if (request_resources(customer_num, request) == 0) {
-        printf("Customer %d's request was granted.\n", customer_num);
-        // Simulate the customer using the resources
-        sleep(1 + rand() % 5); // Random delay to simulate work being done
-
-        // Release the resources after use
-        int release[NUMBER_OF_RESOURCES];
+    while(1) { // Run indefinitely
+        // Example: Simulate customer's resource request
+        int request[NUMBER_OF_RESOURCES]; // Define an array to hold the request
         for (int i = 0; i < NUMBER_OF_RESOURCES; i++) {
-            release[i] = allocation[customer_num][i]; // Release all allocated resources
+            // Request up to the customer's maximum need
+            request[i] = need[customer_num][i] > 0 ? rand() % (need[customer_num][i] + 1) : 0;
         }
 
-        release_resources(customer_num, release);
-        printf("Customer %d released resources.\n", customer_num);
-    } else {
-        printf("Customer %d's request was denied.\n", customer_num);
+        if (request_resources(customer_num, request) == 0) {
+            printf("Customer %d's request was granted.\n", customer_num);
+            // Simulate the customer using the resources
+            sleep(1 + rand() % 5); // Random delay to simulate work being done
+
+            // Release the resources after use
+            int release[NUMBER_OF_RESOURCES];
+            for (int i = 0; i < NUMBER_OF_RESOURCES; i++) {
+                release[i] = allocation[customer_num][i]; // Release all allocated resources
+            }
+
+            release_resources(customer_num, release);
+            printf("Customer %d released resources.\n", customer_num);
+        } else {
+            printf("Customer %d's request was denied.\n", customer_num);
+        }
+
+        sleep(1); // Sleep to prevent spinning too fast
     }
 
     pthread_exit(NULL);
 }
+
 
 
 int check_safety() {
