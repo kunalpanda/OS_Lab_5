@@ -5,7 +5,7 @@
 #include <unistd.h> // For sleep and usleep functions
 
 #define NUMBER_OF_CUSTOMERS 10
-#define NUMBER_OF_RESOURCES 5
+#define NUMBER_OF_RESOURCES 3
 
 
 int available[NUMBER_OF_RESOURCES]; // Available amount of each resource
